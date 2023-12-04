@@ -9,6 +9,7 @@ const {
   getProductReviews,
   deleteReview,
   getAdminProducts,
+  updateProductStock
 } = require("../controllers/productController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
@@ -32,6 +33,9 @@ router
 router.route("/product/:id").get(getProductDetails);
 
 router.route("/review").put(isAuthenticatedUser, createProductReview);
+
+
+router.route('/product/stock/update/:id').post(isAuthenticatedUser, updateProductStock)
 
 router
   .route("/reviews")

@@ -264,3 +264,18 @@ exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
     success: true,
   });
 });
+
+
+//UPDATE PRODUCT STOCK AFTER SUCCESSFUL ORDER
+exports.updateProductStock = async (req, res, next) => {
+  const { id } = req.params
+  const { quantity } = req.body
+  try {
+    const { Stock: existingStock } = await Product.findById(id)
+    const data = await Product.findByIdAndUpdate(id, { Stock: Number(existingStock - quantity) })
+    res.status(200).json({ success: true })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json(error)
+  }
+}

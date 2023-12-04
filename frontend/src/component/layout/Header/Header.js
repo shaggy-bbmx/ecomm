@@ -1,42 +1,135 @@
-import React from "react";
-import { ReactNavbar } from "overlay-navbar";
-import logo from "../../../images/logo.png";
+import React from 'react'
+import './Header.css'
+import { useState } from 'react'
+import { CodeIcon, HamburgetMenuClose, HamburgetMenuOpen } from "./Icons.js"
+import { NavLink } from 'react-router-dom'
+import { useEffect } from 'react'
+import HomeOutline from '@mui/icons-material/HomeRounded'
+import LockOpenIcon from '@mui/icons-material/LockOpen'
+import SearchIcon from '@mui/icons-material/Search'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 
-const options = {
-  burgerColorHover: "#eb4034",
-  logo,
-  logoWidth: "20vmax",
-  navColor1: "white",
-  logoHoverSize: "10px",
-  logoHoverColor: "#eb4034",
-  link1Text: "Home",
-  link2Text: "Products",
-  link3Text: "Contact",
-  link4Text: "About",
-  link1Url: "/",
-  link2Url: "/products",
-  link3Url: "/contact",
-  link4Url: "/about",
-  link1Size: "1.3vmax",
-  link1Color: "rgba(35, 35, 35,0.8)",
-  nav1justifyContent: "flex-end",
-  nav2justifyContent: "flex-end",
-  nav3justifyContent: "flex-start",
-  nav4justifyContent: "flex-start",
-  link1ColorHover: "#eb4034",
-  link1Margin: "1vmax",
-  profileIconUrl: "/login",
-  profileIconColor: "rgba(35, 35, 35,0.8)",
-  searchIconColor: "rgba(35, 35, 35,0.8)",
-  cartIconColor: "rgba(35, 35, 35,0.8)",
-  profileIconColorHover: "#eb4034",
-  searchIconColorHover: "#eb4034",
-  cartIconColorHover: "#eb4034",
-  cartIconMargin: "1vmax",
-};
+
 
 const Header = () => {
-  return <ReactNavbar {...options} />;
-};
 
-export default Header;
+  const [click, setClick] = useState(true)
+  const [scrolling, setScrolling] = useState(false)
+  const [yDistance, setYDistance] = useState(0)
+
+  useEffect(() => {
+    // const handleScroll = () => {
+    //     if (window.scrollY > 50) {
+    //         setScrolling(true)
+    //     } else {
+    //         setScrolling(false)
+    //     }
+    // }
+
+    const handleScroll = () => {
+      if (window.scrollY > yDistance || 0) setScrolling(true)
+      else if (window.scrollY < yDistance) setScrolling(false)
+      setYDistance(window.scrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [yDistance])
+
+
+  const handleClick = () => setClick(!click)
+
+
+
+  return (
+    <div>
+      <nav className="navbar" style={scrolling ? { display: 'none' } : {}}>
+        <div className="nav-container">
+          <NavLink exact to="/" className="nav-logo">
+            <span>FYNTRA</span>
+            <i className="fas fa-code"></i>
+            <span className="icon">
+              <CodeIcon />
+            </span>
+          </NavLink>
+
+          <ul className={!click ? "nav-menu active" : "nav-menu"}>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/"
+                activeClassName="active"
+                className="nav-links home-icon"
+                onClick={handleClick}
+              >
+                <HomeOutline fontSize='large' />
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/login"
+                activeClassName="active"
+                className="nav-links"
+                onClick={handleClick}
+              >
+                <LockOpenIcon fontSize='large' />
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/products"
+                activeClassName="active"
+                className="nav-links"
+                onClick={handleClick}
+              >
+                Products
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/search"
+                activeClassName="active"
+                className="nav-links"
+                onClick={handleClick}
+              >
+                <SearchIcon fontSize='large' />
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/account"
+                activeClassName="active"
+                className="nav-links"
+                onClick={handleClick}
+              >
+                <AccountCircleIcon fontSize='large' />
+              </NavLink>
+            </li>
+          </ul>
+          <div className="nav-icon" onClick={handleClick}>
+            {/* <i className={click ? "fas fa-times" : "fas fa-bars"}></i> */}
+
+            {click ? (
+              <span className="icon">
+                <HamburgetMenuOpen />{" "}
+              </span>
+            ) : (
+              <span className="icon">
+                <HamburgetMenuClose />
+              </span>
+            )}
+          </div>
+        </div>
+      </nav>
+    </div>
+  )
+}
+
+export default Header

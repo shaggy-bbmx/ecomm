@@ -1,5 +1,7 @@
 # MERN E-COMMERCE TUTORIAL
 
+This is the project that we have deployed on live website.
+
 Hi! My name is **Abhishek Singh**, I have created this tutorial to teach MERN Stack for free on YouTube.
 
 # Prerequisite

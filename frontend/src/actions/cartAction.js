@@ -2,6 +2,7 @@ import {
   ADD_TO_CART,
   REMOVE_CART_ITEM,
   SAVE_SHIPPING_INFO,
+  EMPTY_CART
 } from "../constants/cartConstants";
 import axios from "axios";
 
@@ -43,3 +44,27 @@ export const saveShippingInfo = (data) => async (dispatch) => {
 
   localStorage.setItem("shippingInfo", JSON.stringify(data));
 };
+
+
+//ACTION FOR REMOVING ALL ITEMS FROM CART ---AFTER DONE WITH SHOPPING
+export const emptyCart = () => async (dispatch) => {
+
+
+  const cart = JSON.parse(localStorage['cartItems'])
+
+  for (let i = 0; i < cart.length; ++i) {
+    try {
+      await axios.post(`/api/v1/product/stock/update/${cart[i].product}`,
+        { quantity: cart[i].quantity }, {
+        'Content-Type': 'application/json'
+      })
+      dispatch({
+        type: EMPTY_CART
+      })
+      localStorage.removeItem('cartItems')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+}
